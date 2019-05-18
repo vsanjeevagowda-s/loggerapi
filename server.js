@@ -22,7 +22,10 @@ const recordSchema = new Schema({
     unique: true,
     required: true,
   },
-  description: String,
+  description: {
+    type: String,
+    required: true,
+  },
 });
 recordSchema.set('toJSON', { virtuals: true });
 const Record = mongoose.model('Record', recordSchema);
@@ -55,6 +58,17 @@ router.get('/records/list', async (req, res) => {
   try {
     const resp = await Record.find({}).sort([['date', -1]]);
     return res.status(200).json({ success: true, resp });
+  } catch (error) {
+    return res.status(422).json({ success: false, error: hmve(Record, error).message });
+  }
+});
+
+router.put('/records/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const resp = await Record.findOneAndUpdate({_id: id}, { description }, {runValidators: true});
+    return res.status(201).json({ success: true, resp });
   } catch (error) {
     return res.status(422).json({ success: false, error: hmve(Record, error).message });
   }
