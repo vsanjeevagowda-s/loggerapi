@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "strt": "nodemon index"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,7 +12,9 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "hmve": "^1.1.1",
+    "mongoose": "^5.5.9"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
