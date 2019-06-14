@@ -28,6 +28,7 @@ const recordSchema = new Schema({
   },
 });
 recordSchema.set('toJSON', { virtuals: true });
+recordSchema.index({ description: 'text' });
 const Record = mongoose.model('Record', recordSchema);
 
 mongoose.Promise = global.Promise;
@@ -68,6 +69,16 @@ router.put('/records/update/:id', async (req, res) => {
     const { id } = req.params;
     const { description } = req.body;
     const resp = await Record.findOneAndUpdate({_id: id}, { description }, {runValidators: true});
+    return res.status(201).json({ success: true, resp });
+  } catch (error) {
+    return res.status(422).json({ success: false, error: hmve(Record, error).message });
+  }
+});
+
+router.get('/records/search', async (req, res) => {
+  try {
+    const { key } = req.query;
+    const resp = await Record.find({$text: {$search: key}});
     return res.status(201).json({ success: true, resp });
   } catch (error) {
     return res.status(422).json({ success: false, error: hmve(Record, error).message });
