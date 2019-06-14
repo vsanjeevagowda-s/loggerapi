@@ -28,7 +28,6 @@ const recordSchema = new Schema({
   },
 });
 recordSchema.set('toJSON', { virtuals: true });
-recordSchema.index({ description: 'text' });
 const Record = mongoose.model('Record', recordSchema);
 
 mongoose.Promise = global.Promise;
@@ -78,8 +77,8 @@ router.put('/records/update/:id', async (req, res) => {
 router.get('/records/search', async (req, res) => {
   try {
     const { key } = req.query;
-    const resp = await Record.find({$text: {$search: key}});
-    return res.status(201).json({ success: true, resp });
+    const resp = await Record.find({ "description" : { $regex: key, $options: 'i' }});
+    return res.status(200).json({ success: true, resp });
   } catch (error) {
     return res.status(422).json({ success: false, error: hmve(Record, error).message });
   }
